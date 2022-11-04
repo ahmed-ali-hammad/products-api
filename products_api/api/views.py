@@ -1,13 +1,12 @@
 
 import json
 
+from api.models import Item
+from api.serializers import ItemSerializer, LotSerializer
 from rest_framework import mixins
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-
-from api.models import Item
-from api.serializers import ItemSerializer, LotSerializer
 
 
 class ItemViewset(GenericViewSet, mixins.CreateModelMixin):
