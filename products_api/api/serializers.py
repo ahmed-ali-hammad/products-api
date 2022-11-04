@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from api.models import Item, Lot, RelatedProduct
+from rest_framework import serializers
 
 
 class RelatedProductSerializer(serializers.ModelSerializer):
@@ -13,6 +12,7 @@ class RelatedProductSerializer(serializers.ModelSerializer):
         print(validated_data)
         related_product = super().create(validated_data)
         return related_product
+
 
 class ItemSerializer(serializers.Serializer):
     product_feed = serializers.FileField
@@ -27,7 +27,7 @@ class ItemCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_internal_value(self, data):
-        # 'edeka_article_number' comes as str or boolean, this is to change the boolean 'False' to null before saving 
+        # 'edeka_article_number' comes as str or boolean, this is to change the boolean 'False' to null before saving
         if data.get('edeka_article_number', None) is False:
             data['edeka_article_number'] = None
         # Same with 'notes'
