@@ -1,8 +1,13 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+
+from api.views import ItemViewset
 
 app_name = "api"
 
-urlpatterns = [
-    # path('test_view/', admin.site.urls),
+router = DefaultRouter()
+router.register('items', ItemViewset, basename='items')
 
+urlpatterns = [
+    path('', include(router.urls)),
 ]
