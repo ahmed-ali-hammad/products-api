@@ -1,8 +1,7 @@
+from api.utils import NoLeadingZerosCharField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
-
-from api.utils import NoLeadingZerosCharField
 
 
 class Session(TimeStampedModel):
@@ -17,8 +16,8 @@ class Session(TimeStampedModel):
         verbose_name = _('Session')
         verbose_name_plural = _('Sessions')
 
-    def _str__(self):
-        return self.session_id
+    def __str__(self):
+        return str(self.session_id)
 
 
 class Lot(TimeStampedModel):
@@ -37,9 +36,6 @@ class Lot(TimeStampedModel):
     class Meta:
         verbose_name = _('Lot')
         verbose_name_plural = _('Lots')
-
-    def _str__(self):
-        return self.id
 
 
 class Item(TimeStampedModel):
@@ -73,9 +69,9 @@ class Item(TimeStampedModel):
     class Meta:
         verbose_name = _('Item')
         verbose_name_plural = _('Items')
-        # unique_together = ['code', 'type']
+        unique_together = ['code', 'type']
 
-    def _str__(self):
+    def __str__(self):
         return self.code
 
 
@@ -88,5 +84,5 @@ class RelatedProduct(TimeStampedModel):
         verbose_name = _('Related Product')
         verbose_name_plural = _('Related Products')
 
-    def _str__(self):
+    def __str__(self):
         return self.trade_item_unit_descriptor

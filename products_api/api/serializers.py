@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from api.models import Item, Lot, RelatedProduct, Session
+from rest_framework import serializers
 
 
 class AcceptFileSerializer(serializers.Serializer):
