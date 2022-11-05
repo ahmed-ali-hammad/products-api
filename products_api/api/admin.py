@@ -1,5 +1,6 @@
-from api.models import Item, Lot, RelatedProduct
 from django.contrib import admin
+
+from api.models import Item, Lot, RelatedProduct
 
 
 class ItemAdmin(admin.ModelAdmin):

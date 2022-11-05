@@ -1,7 +1,8 @@
-from api.utils import NoLeadingZerosCharField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
+
+from api.utils import NoLeadingZerosCharField
 
 
 class Item(TimeStampedModel):
@@ -17,7 +18,7 @@ class Item(TimeStampedModel):
     amount_multiplier = models.IntegerField(_('Amount Multiplier'), null=True, blank=True)
     edeka_article_number = models.CharField(_('Edeka Article Number'), max_length=225, null=True, blank=True)
     gross_weight = models.JSONField(_('Gross Weight'), null=True, blank=True)
-    net_weight = models.JSONField(null=True, blank=True)
+    net_weight = models.JSONField(_('Net Weight'), null=True, blank=True)
     unit_name = models.CharField(_('Unit Name'), max_length=50, null=True, blank=True)
     notes = models.CharField(_('Notes'), max_length=225, null=True, blank=True)
     packaging = models.CharField(_('Packaging'), max_length=100, null=True, blank=True)
@@ -29,8 +30,8 @@ class Item(TimeStampedModel):
     regulated_name = models.CharField(_('Regulated Name'), max_length=100, null=True, blank=True)
     vat_rate = models.CharField(_('Vat Rate'), max_length=100, null=True, blank=True)
     category = models.CharField(_('Category'), max_length=225, null=True, blank=True)
-    hierarchies = models.JSONField(null=True, blank=True)
-    vat = models.JSONField(null=True, blank=True)
+    hierarchies = models.JSONField(_('Hierarchies'), null=True, blank=True)
+    vat = models.JSONField(_('vat'), null=True, blank=True)
 
     class Meta:
         verbose_name = _('Item')
@@ -42,7 +43,7 @@ class Item(TimeStampedModel):
 
 
 class Lot(TimeStampedModel):
-    item = models.ForeignKey(Item, related_name='lot_item', on_delete=models.CASCADE, null=True, blank=True)
+    item = models.ForeignKey(Item, related_name='lot', on_delete=models.CASCADE, null=True, blank=True)
     lot_number = models.CharField(_('Lot Number'), max_length=225, null=True, blank=True)
     amount = models.IntegerField(_('Amount'), null=True, blank=True)
     bbd = models.DateTimeField(_('Best Before Date'), null=True, blank=True)
@@ -62,8 +63,8 @@ class Lot(TimeStampedModel):
 
 
 class RelatedProduct(TimeStampedModel):
-    item = models.ForeignKey(Item, related_name='item', on_delete=models.CASCADE)
-    gtin = models.CharField(max_length=225, null=True, blank=True)
+    item = models.ForeignKey(Item, related_name='related_products', on_delete=models.CASCADE)
+    gtin = models.CharField(_('Gtin'), max_length=225, null=True, blank=True)
     trade_item_unit_descriptor = models.CharField(_('Trade Item Unit Descriptor'), max_length=225, null=True, blank=True)
 
     class Meta:
