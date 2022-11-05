@@ -1,12 +1,15 @@
-from api.models import Item, Lot, RelatedProduct, Session
 from rest_framework import serializers
+
+from api.models import Item, Lot, RelatedProduct, Session
 
 
 class AcceptFileSerializer(serializers.Serializer):
+    """serializer class used to accept a file field"""
     product_feed = serializers.FileField()
 
 
 class AcceptCodeSerializer(serializers.Serializer):
+    """serializer class used to accept item code"""
     code = serializers.CharField(required=False)
 
 
@@ -32,10 +35,13 @@ class ItemCreateSerializer(serializers.ModelSerializer):
         # 'edeka_article_number' comes as str or boolean, this is to change the boolean 'False' to null before saving
         if data.get('edeka_article_number', None) is False:
             data['edeka_article_number'] = None
+
         # Same with 'notes'
         if data.get('notes', None) is False:
             data['notes'] = None
 
+        # The field `trade_item_descriptor` has to be transformed to `trade_item_unit_descriptor` if it exists in the data
+        # before being stored in the DB.
         if 'trade_item_descriptor' in data:
             data['trade_item_unit_descriptor'] = data.pop('trade_item_descriptor')
 
@@ -45,12 +51,11 @@ class ItemCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         if 'related_products' in validated_data:
-            related_products = validated_data.pop('related_products')
+            related_products_dicts = validated_data.pop('related_products')
             item = super().create(validated_data)
-            if len(related_products) > 0:
-                for related_product in related_products:
-                    related_product['item'] = item
-                    self.fields['related_products'].create(related_product)
+            for related_products_dict in related_products_dicts:
+                related_products_dict['item'] = item
+                self.fields['related_products'].create(related_products_dict)
         else:
             item = super().create(validated_data)
         return item
