@@ -1,5 +1,21 @@
 version: '3.8'
 services:
+
+  # database 
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    env_file:
+      - products_api/products_api/.env
+    container_name: postgres_db
+
+  # redis
+  redis:
+    image: redis:alpine
+    container_name: redis
+  
+  # django
   app:
     build: .
     volumes:
@@ -11,10 +27,19 @@ services:
     command: python3 products_api/manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
-  db:
-    image: postgres
+
+  # celery
+  celery:
+    restart: always
+    build:
+      context: .
+    command: >
+      sh -c "cd products_api && celery -A products_api worker -l INFO"
     volumes:
-      - ./data/db:/var/lib/postgresql/data
-    env_file:
-      - products_api/products_api/.env
-    container_name: postgres_db
+      - .:/django
+    container_name: celery
+    depends_on:
+      - db
+      - redis
+      - app 
+  
