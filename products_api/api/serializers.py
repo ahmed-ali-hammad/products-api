@@ -1,21 +1,25 @@
-from api.models import Item, Lot, RelatedProduct
 from rest_framework import serializers
+
+from api.models import Item, Lot, RelatedProduct
+
+
+class AcceptFileSerializer(serializers.Serializer):
+    product_feed = serializers.FileField
+
+
+class AcceptCodeSerializer(serializers.Serializer):
+    class Meta:
+        fields = ['code']
 
 
 class RelatedProductSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = RelatedProduct
-        fields = '__all__'
+        fields = ['gtin', 'trade_item_unit_descriptor']
 
     def create(self, validated_data):
-        print(validated_data)
         related_product = super().create(validated_data)
         return related_product
-
-
-class ItemSerializer(serializers.Serializer):
-    product_feed = serializers.FileField
 
 
 class ItemCreateSerializer(serializers.ModelSerializer):
@@ -48,14 +52,39 @@ class ItemCreateSerializer(serializers.ModelSerializer):
             if len(related_products) > 0:
                 for related_product in related_products:
                     related_product['item'] = item
-                    print(related_product)
                     self.fields['related_products'].create(related_product)
         else:
             item = super().create(validated_data)
         return item
 
 
-class LotSerializer(serializers.ModelSerializer):
+class ItemListSerializer(serializers.ModelSerializer):
+    related_products = serializers.SerializerMethodField()
+    amount_in_all_lots = serializers.SerializerMethodField()
+    lot = serializers.SerializerMethodField()
+    type = serializers.CharField(required=False)
+
+    class Meta:
+        model = Item
+        fields = '__all__'
+
+    def get_related_products(self, obj):
+        related_products = obj.related_products.all()
+        if related_products:
+            return RelatedProductSerializer(related_products, many=True).data
+        else:
+            return
+
+    def get_amount_in_all_lots(self, obj):
+        amount_in_all_lots = 0
+        [amount_in_all_lots := amount_in_all_lots + lot.amount for lot in obj.lot.all()]
+        return amount_in_all_lots
+
+    def get_lot(self, obj):
+        return LotListSerializer(obj.lot.all(), many=True).data
+
+
+class LotCreateSerializer(serializers.ModelSerializer):
     item = ItemCreateSerializer()
 
     class Meta:
@@ -73,9 +102,11 @@ class LotSerializer(serializers.ModelSerializer):
         return lot
 
 
-class RelatedProductSerializer(serializers.ModelSerializer):
-    item = ItemCreateSerializer()
-
+class LotListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RelatedProduct
-        fields = '__all__'
+        model = Lot
+        fields = [
+            'lot_number', 'amount', 'bbd', 'comment', 'country_of_disassembly',
+            'country_of_rearing', 'country_of_slaughter', 'cutting_plant_registration',
+            'slaughterhouse_registration'
+        ]
