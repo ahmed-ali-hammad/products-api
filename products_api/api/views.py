@@ -1,16 +1,18 @@
 
 import json
 
-from api.models import Item
-from api.serializers import (AcceptCodeSerializer, AcceptFileSerializer,
-                             ItemListSerializer, LotCreateSerializer,
-                             SessionCreateSerializer)
-from api.utils import remove_leading_zeros
-from rest_framework import mixins
+from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+
+from api.models import Item
+from api.serializers import (AcceptCodeSerializer, AcceptFileSerializer,
+                             ItemListSerializer, LotCreateSerializer)
+
+from api.tasks import save_session_data
+from api.utils import remove_leading_zeros
 
 
 class ItemViewset(GenericViewSet, mixins.CreateModelMixin):
@@ -34,28 +36,22 @@ class ItemViewset(GenericViewSet, mixins.CreateModelMixin):
         Item.objects.all()
 
     def create(self, request, *args, **kwargs):
-        serializer = LotCreateSerializer(data=request.data['amounts'], many=True)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-        return Response({'detail': 'recieved the file'})
+        """ This action is use to handle session data if it's sent as json str"""
+        # We save the data in a background task to handle the case when the payload is large and takes time
+        save_session_data.delay(request.data)
 
-    # @action(detail=False, methods=['post'])
-    # def create_from_feed_file(self, request, *args, **kwargs):
-    #     file_obj = request.data['file']
-    #     data = json.load(file_obj)
-    #     serializer = LotCreateSerializer(data=data['amounts'], many=True)
-    #     if serializer.is_valid(raise_exception=True):
-    #         serializer.save()
-    #     return Response({'detail': 'recieved the file'})
+        return Response({'detail': 'Session data is being saved'}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
     def create_from_feed_file(self, request, *args, **kwargs):
+        """ This action is use to handle session data if it's sent as json file"""
+
         file_obj = request.data['file']
-        data = json.load(file_obj)
-        serializer = SessionCreateSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-        return Response({'detail': 'recieved the file'})
+
+        # We save the data in a background task to handle the case when the payload is large and takes time
+        save_session_data.delay(json.load(file_obj))
+
+        return Response({'detail': 'Session data is being saved'}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
     def list_products(self, request, *args, **kwargs):
