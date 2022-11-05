@@ -1,6 +1,5 @@
-from django.contrib import admin
-
 from api.models import Item, Lot, RelatedProduct, Session
+from django.contrib import admin
 
 
 class ItemAdmin(admin.ModelAdmin):
@@ -9,13 +8,13 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 class RelatedProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'gtin', 'trade_item_unit_descriptor', 'created']
+    list_display = ['id', 'item', 'gtin', 'trade_item_unit_descriptor', 'created']
     search_fields = ['id', 'item__code', 'gtin', 'trade_item_unit_descriptor']
     raw_id_fields = ['item']
 
 
 class LotAdmin(admin.ModelAdmin):
-    list_display = ['id', 'amount', 'bbd', 'created', 'modified', 'item']
+    list_display = ['id', 'item', 'amount', 'bbd', 'created']
     raw_id_fields = ['item', 'session']
 
 

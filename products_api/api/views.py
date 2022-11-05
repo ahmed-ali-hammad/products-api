@@ -1,17 +1,16 @@
 
 import json
 
-from rest_framework import mixins, status
-from rest_framework.decorators import action
-from rest_framework.parsers import JSONParser, MultiPartParser
-from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
-
 from api.models import Item
 from api.serializers import (AcceptCodeSerializer, AcceptFileSerializer,
                              ItemListSerializer, SessionCreateSerializer)
 from api.tasks import save_session_data
 from api.utils import remove_leading_zeros
+from rest_framework import mixins, status
+from rest_framework.decorators import action
+from rest_framework.parsers import JSONParser, MultiPartParser
+from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 
 class ItemViewset(GenericViewSet, mixins.CreateModelMixin):
