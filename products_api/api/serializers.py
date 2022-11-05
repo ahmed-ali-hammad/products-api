@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from api.models import Item, Lot, RelatedProduct, Session
+from rest_framework import serializers
 
 
 class AcceptFileSerializer(serializers.Serializer):
@@ -128,11 +127,25 @@ class ItemListSerializer(serializers.ModelSerializer):
         return LotListSerializer(obj.lot.all(), many=True).data
 
 
+class SessionListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Session
+        fields = [
+            'session_id', 'session_start_time', 'session_end_time', 'supplier_id', 'user_id'
+        ]
+
+
 class LotListSerializer(serializers.ModelSerializer):
+    session = serializers.SerializerMethodField()
+
     class Meta:
         model = Lot
         fields = [
             'lot_number', 'amount', 'bbd', 'comment', 'country_of_disassembly',
             'country_of_rearing', 'country_of_slaughter', 'cutting_plant_registration',
-            'slaughterhouse_registration'
+            'slaughterhouse_registration', 'session'
         ]
+
+    def get_session(self, obj):
+        return SessionListSerializer(obj.session).data
