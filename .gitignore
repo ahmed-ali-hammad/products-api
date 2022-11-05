@@ -1,6 +1,7 @@
 # project
 products.json
 description.md
+product_test.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

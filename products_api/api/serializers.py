@@ -1,15 +1,13 @@
+from api.models import Item, Lot, RelatedProduct, Session
 from rest_framework import serializers
-
-from api.models import Item, Lot, RelatedProduct
 
 
 class AcceptFileSerializer(serializers.Serializer):
-    product_feed = serializers.FileField
+    product_feed = serializers.FileField()
 
 
 class AcceptCodeSerializer(serializers.Serializer):
-    class Meta:
-        fields = ['code']
+    code = serializers.CharField(required=False)
 
 
 class RelatedProductSerializer(serializers.ModelSerializer):
@@ -58,15 +56,60 @@ class ItemCreateSerializer(serializers.ModelSerializer):
         return item
 
 
+class LotCreateSerializer(serializers.ModelSerializer):
+    item = ItemCreateSerializer()
+
+    class Meta:
+        model = Lot
+        fields = '__all__'
+
+    def create(self, validated_data):
+        item_dict = validated_data.pop('item')
+        if not Item.objects.filter(code=item_dict['code'], type=item_dict['type']):
+            item_instance = self.fields['item'].create(item_dict)
+        else:
+            item_instance = Item.objects.filter(code=item_dict['code'], type=item_dict['type']).first()
+        validated_data['item'] = item_instance
+        lot = super().create(validated_data)
+        return lot
+
+
+class SessionCreateSerializer(serializers.ModelSerializer):
+    amounts = LotCreateSerializer(many=True)
+
+    class Meta:
+        model = Session
+        fields = '__all__'
+
+    def create(self, validated_data):
+        lots = validated_data.pop('amounts')
+
+        # adding the session to the session tables
+        session = super().create(validated_data)
+
+        # assigning the session to each dict
+        for lot in lots: lot['session'] = session
+
+        # no we have all the data to create the lots
+        self.fields['amounts'].create(lots)
+        return session
+
+
 class ItemListSerializer(serializers.ModelSerializer):
     related_products = serializers.SerializerMethodField()
     amount_in_all_lots = serializers.SerializerMethodField()
-    lot = serializers.SerializerMethodField()
-    type = serializers.CharField(required=False)
+    lots = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
-        fields = '__all__'
+        fields = [
+            'code', 'type', 'amount_in_all_lots', 'lots', 'id', 'brand', 'description', 'status',
+            'categ_id', 'category_id', 'category', 'amount_multiplier', 'edeka_article_number',
+            'gross_weight', 'net_weight', 'unit_name', 'notes', 'packaging', 'related_products',
+            'requires_best_before_date', 'requires_meat_info', 'trade_item_unit_descriptor',
+            'trade_item_unit_descriptor_name', 'validation_status', 'regulated_name', 'vat_rate',
+            'vat', 'hierarchies'
+        ]
 
     def get_related_products(self, obj):
         related_products = obj.related_products.all()
@@ -80,26 +123,8 @@ class ItemListSerializer(serializers.ModelSerializer):
         [amount_in_all_lots := amount_in_all_lots + lot.amount for lot in obj.lot.all()]
         return amount_in_all_lots
 
-    def get_lot(self, obj):
+    def get_lots(self, obj):
         return LotListSerializer(obj.lot.all(), many=True).data
-
-
-class LotCreateSerializer(serializers.ModelSerializer):
-    item = ItemCreateSerializer()
-
-    class Meta:
-        model = Lot
-        fields = '__all__'
-
-    def create(self, validated_data):
-        item = validated_data.pop('item')
-        if not Item.objects.filter(code=item['code'], type=item['type']):
-            item = self.fields['item'].create(item)
-        else:
-            item = Item.objects.filter(code=item['code'], type=item['type']).first()
-        validated_data['item'] = item
-        lot = super().create(validated_data)
-        return lot
 
 
 class LotListSerializer(serializers.ModelSerializer):

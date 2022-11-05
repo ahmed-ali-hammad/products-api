@@ -1,6 +1,5 @@
+from api.models import Item, Lot, RelatedProduct, Session
 from django.contrib import admin
-
-from api.models import Item, Lot, RelatedProduct
 
 
 class ItemAdmin(admin.ModelAdmin):
@@ -18,6 +17,11 @@ class LotAdmin(admin.ModelAdmin):
     raw_id_fields = ['item']
 
 
+class SessionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'session_id']
+
+
 admin.site.register(Item, ItemAdmin)
 admin.site.register(RelatedProduct, RelatedProductAdmin)
 admin.site.register(Lot, LotAdmin)
+admin.site.register(Session, SessionAdmin)
