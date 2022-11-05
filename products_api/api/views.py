@@ -1,16 +1,17 @@
 
 import json
 
-from api.models import Item
-from api.serializers import (AcceptCodeSerializer, AcceptFileSerializer,
-                             ItemListSerializer, SessionCreateSerializer)
-from api.tasks import save_session_data
-from api.utils import remove_leading_zeros
 from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+
+from api.models import Item
+from api.serializers import (AcceptCodeSerializer, AcceptFileSerializer,
+                             ItemListSerializer, SessionCreateSerializer)
+from api.tasks import save_session_data
+from api.utils import remove_leading_zeros
 
 
 class ItemViewset(GenericViewSet, mixins.CreateModelMixin):
@@ -46,6 +47,9 @@ class ItemViewset(GenericViewSet, mixins.CreateModelMixin):
 
         file_obj = request.data['file']
 
+        if not file_obj.name.endswith('.json'):
+            return Response({'detail': 'Please provide a json file'}, status=status.HTTP_400_BAD_REQUEST)
+
         # We process the data in a background task to handle the case when the payload is large and takes time
         save_session_data.delay(json.load(file_obj))
 
@@ -55,7 +59,11 @@ class ItemViewset(GenericViewSet, mixins.CreateModelMixin):
     def list_products(self, request, *args, **kwargs):
         """This action will return one item if its code is provided and return all items otherwise"""
         if request.data.get('code', None):
-            code = remove_leading_zeros(request.data['code'])
+
+            serializer = AcceptCodeSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            code = remove_leading_zeros(str(request.data['code']))  # We use str in case a number is provided instead of a str
 
             item = Item.objects.prefetch_related('lot', 'related_products').filter(code=code).first()
             if item:

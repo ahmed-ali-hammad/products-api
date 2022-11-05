@@ -1,15 +1,24 @@
-from api.utils import NoLeadingZerosCharField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from model_utils.models import TimeStampedModel
 
+from api.utils import NoLeadingZerosCharField
+
 
 class Session(TimeStampedModel):
+    """Table to stor the session information"""
     session_id = models.BigIntegerField(_('Session ID'), null=True, blank=True)
     session_start_time = models.DateTimeField(_('Session Start Time'), null=True, blank=True)
     session_end_time = models.DateTimeField(_('Session End Time'), null=True, blank=True)
     supplier_id = models.CharField(_('Supplier id'), max_length=225, null=True, blank=True)
     user_id = models.CharField(_('User id'), max_length=225, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('Session')
+        verbose_name_plural = _('Sessions')
+
+    def _str__(self):
+        return self.session_id
 
 
 class Lot(TimeStampedModel):
@@ -30,7 +39,7 @@ class Lot(TimeStampedModel):
         verbose_name_plural = _('Lots')
 
     def _str__(self):
-        return self.bbd
+        return self.id
 
 
 class Item(TimeStampedModel):
@@ -56,10 +65,10 @@ class Item(TimeStampedModel):
     trade_item_unit_descriptor_name = models.CharField(_('Trade Item Unit Descriptor Name'), max_length=225, null=True, blank=True)
     validation_status = models.CharField(_('Validation Status'), max_length=100, null=True, blank=True)
     regulated_name = models.CharField(_('Regulated Name'), max_length=100, null=True, blank=True)
+    vat = models.JSONField(_('Vat'), null=True, blank=True)
     vat_rate = models.CharField(_('Vat Rate'), max_length=100, null=True, blank=True)
     category = models.CharField(_('Category'), max_length=225, null=True, blank=True)
-    hierarchies = models.JSONField(null=True, blank=True)
-    vat = models.JSONField(null=True, blank=True)
+    hierarchies = models.JSONField(_('Hierarchies'), null=True, blank=True)
 
     class Meta:
         verbose_name = _('Item')
@@ -72,7 +81,7 @@ class Item(TimeStampedModel):
 
 class RelatedProduct(TimeStampedModel):
     item = models.ForeignKey('Item', related_name='related_products', on_delete=models.CASCADE)
-    gtin = models.CharField(max_length=225, null=True, blank=True)
+    gtin = models.CharField(_('Gtin'), max_length=225, null=True, blank=True)
     trade_item_unit_descriptor = models.CharField(_('Trade Item Unit Descriptor'), max_length=225, null=True, blank=True)
 
     class Meta:
