@@ -12,4 +12,8 @@ This API is runnable in Docker using these commands
   - docker-compose up  
   
 to start the terminal inside Docker   
-  - docker exec -it products_api_container /bin/bash
+  - docker exec -it products_api_container /bin/bash  
+  
+API documentation can be accessed using this endpoint: http://localhost:8000/api/schema/swagger-ui/
+
+The database used is Postgres, also celery is used for background tasks and redis is used for communication between django and celery  
