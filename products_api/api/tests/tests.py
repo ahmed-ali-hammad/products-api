@@ -13,14 +13,16 @@ class ItemViewset(TestCase):
         save_session_data(json.loads(sample_data))
 
     def test_create(self):
-        response = self.client.post('/api/items/', data=sample_data, content_type='application/json')
+        response = self.client.post(
+            "/api/items/", data=sample_data, content_type="application/json"
+        )
 
         self.assertEqual(response.data, {"detail": "Session data is being stored"})
         self.assertEqual(response.status_code, 200)
 
     def test_list_products(self):
 
-        response = self.client.post('/api/items/list_products/')
+        response = self.client.post("/api/items/list_products/")
 
         self.assertEqual(len(response.data), 2)
         self.assertEqual(response.status_code, 200)
@@ -31,4 +33,6 @@ class ItemViewset(TestCase):
 
     def test_parse_unicode_characters(self):
 
-        self.assertEqual(Item.objects.all().first().description, "Walnüsse idS 30mm+ FR I 500g BT")
+        self.assertEqual(
+            Item.objects.all().first().description, "Walnüsse idS 30mm+ FR I 500g BT"
+        )

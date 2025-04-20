@@ -11,101 +11,452 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Item',
+            name="Item",
             fields=[
-                ('db_id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='Database ID')),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('id', models.CharField(blank=True, help_text='This is not the database id', max_length=225, null=True, verbose_name='Item ID')),
-                ('code', api.utils.NoLeadingZerosCharField(blank=True, db_index=True, max_length=225, null=True, verbose_name='Code')),
-                ('type', models.CharField(blank=True, max_length=225, null=True, verbose_name='Type')),
-                ('brand', models.CharField(blank=True, max_length=225, null=True, verbose_name='Brand')),
-                ('description', models.CharField(blank=True, max_length=225, null=True, verbose_name='Description')),
-                ('status', models.CharField(blank=True, max_length=225, null=True, verbose_name='Status')),
-                ('categ_id', models.IntegerField(blank=True, null=True, verbose_name='Categ ID')),
-                ('category_id', models.CharField(blank=True, max_length=225, null=True, verbose_name='Category ID')),
-                ('amount_multiplier', models.IntegerField(blank=True, null=True, verbose_name='Amount Multiplier')),
-                ('edeka_article_number', models.CharField(blank=True, max_length=225, null=True, verbose_name='Edeka Article Number')),
-                ('gross_weight', models.JSONField(blank=True, null=True, verbose_name='Gross Weight')),
-                ('net_weight', models.JSONField(blank=True, null=True)),
-                ('unit_name', models.CharField(blank=True, max_length=50, null=True, verbose_name='Unit Name')),
-                ('notes', models.CharField(blank=True, max_length=225, null=True, verbose_name='Notes')),
-                ('packaging', models.CharField(blank=True, max_length=100, null=True, verbose_name='Packaging')),
-                ('requires_best_before_date', models.BooleanField(blank=True, null=True, verbose_name='Requires Best Before Date')),
-                ('requires_meat_info', models.BooleanField(blank=True, null=True, verbose_name='Requires Meat Info')),
-                ('trade_item_unit_descriptor', models.CharField(blank=True, max_length=225, null=True, verbose_name='Trade Item Unit Descriptor')),
-                ('trade_item_unit_descriptor_name', models.CharField(blank=True, max_length=225, null=True, verbose_name='Trade Item Unit Descriptor Name')),
-                ('validation_status', models.CharField(blank=True, max_length=100, null=True, verbose_name='Validation Status')),
-                ('regulated_name', models.CharField(blank=True, max_length=100, null=True, verbose_name='Regulated Name')),
-                ('vat', models.JSONField(blank=True, null=True, verbose_name='Vat')),
-                ('vat_rate', models.CharField(blank=True, max_length=100, null=True, verbose_name='Vat Rate')),
-                ('category', models.CharField(blank=True, max_length=225, null=True, verbose_name='Category')),
-                ('hierarchies', models.JSONField(blank=True, null=True, verbose_name='Hierarchies')),
+                (
+                    "db_id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="Database ID",
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                (
+                    "id",
+                    models.CharField(
+                        blank=True,
+                        help_text="This is not the database id",
+                        max_length=225,
+                        null=True,
+                        verbose_name="Item ID",
+                    ),
+                ),
+                (
+                    "code",
+                    api.utils.NoLeadingZerosCharField(
+                        blank=True,
+                        db_index=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Code",
+                    ),
+                ),
+                (
+                    "type",
+                    models.CharField(
+                        blank=True, max_length=225, null=True, verbose_name="Type"
+                    ),
+                ),
+                (
+                    "brand",
+                    models.CharField(
+                        blank=True, max_length=225, null=True, verbose_name="Brand"
+                    ),
+                ),
+                (
+                    "description",
+                    models.CharField(
+                        blank=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Description",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        blank=True, max_length=225, null=True, verbose_name="Status"
+                    ),
+                ),
+                (
+                    "categ_id",
+                    models.IntegerField(blank=True, null=True, verbose_name="Categ ID"),
+                ),
+                (
+                    "category_id",
+                    models.CharField(
+                        blank=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Category ID",
+                    ),
+                ),
+                (
+                    "amount_multiplier",
+                    models.IntegerField(
+                        blank=True, null=True, verbose_name="Amount Multiplier"
+                    ),
+                ),
+                (
+                    "edeka_article_number",
+                    models.CharField(
+                        blank=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Edeka Article Number",
+                    ),
+                ),
+                (
+                    "gross_weight",
+                    models.JSONField(
+                        blank=True, null=True, verbose_name="Gross Weight"
+                    ),
+                ),
+                ("net_weight", models.JSONField(blank=True, null=True)),
+                (
+                    "unit_name",
+                    models.CharField(
+                        blank=True, max_length=50, null=True, verbose_name="Unit Name"
+                    ),
+                ),
+                (
+                    "notes",
+                    models.CharField(
+                        blank=True, max_length=225, null=True, verbose_name="Notes"
+                    ),
+                ),
+                (
+                    "packaging",
+                    models.CharField(
+                        blank=True, max_length=100, null=True, verbose_name="Packaging"
+                    ),
+                ),
+                (
+                    "requires_best_before_date",
+                    models.BooleanField(
+                        blank=True, null=True, verbose_name="Requires Best Before Date"
+                    ),
+                ),
+                (
+                    "requires_meat_info",
+                    models.BooleanField(
+                        blank=True, null=True, verbose_name="Requires Meat Info"
+                    ),
+                ),
+                (
+                    "trade_item_unit_descriptor",
+                    models.CharField(
+                        blank=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Trade Item Unit Descriptor",
+                    ),
+                ),
+                (
+                    "trade_item_unit_descriptor_name",
+                    models.CharField(
+                        blank=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Trade Item Unit Descriptor Name",
+                    ),
+                ),
+                (
+                    "validation_status",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                        verbose_name="Validation Status",
+                    ),
+                ),
+                (
+                    "regulated_name",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                        verbose_name="Regulated Name",
+                    ),
+                ),
+                ("vat", models.JSONField(blank=True, null=True, verbose_name="Vat")),
+                (
+                    "vat_rate",
+                    models.CharField(
+                        blank=True, max_length=100, null=True, verbose_name="Vat Rate"
+                    ),
+                ),
+                (
+                    "category",
+                    models.CharField(
+                        blank=True, max_length=225, null=True, verbose_name="Category"
+                    ),
+                ),
+                (
+                    "hierarchies",
+                    models.JSONField(blank=True, null=True, verbose_name="Hierarchies"),
+                ),
             ],
             options={
-                'verbose_name': 'Item',
-                'verbose_name_plural': 'Items',
-                'unique_together': {('code', 'type')},
+                "verbose_name": "Item",
+                "verbose_name_plural": "Items",
+                "unique_together": {("code", "type")},
             },
         ),
         migrations.CreateModel(
-            name='Session',
+            name="Session",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('session_id', models.BigIntegerField(blank=True, null=True, verbose_name='Session ID')),
-                ('session_start_time', models.DateTimeField(blank=True, null=True, verbose_name='Session Start Time')),
-                ('session_end_time', models.DateTimeField(blank=True, null=True, verbose_name='Session End Time')),
-                ('supplier_id', models.CharField(blank=True, max_length=225, null=True, verbose_name='Supplier id')),
-                ('user_id', models.CharField(blank=True, max_length=225, null=True, verbose_name='User id')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                (
+                    "session_id",
+                    models.BigIntegerField(
+                        blank=True, null=True, verbose_name="Session ID"
+                    ),
+                ),
+                (
+                    "session_start_time",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="Session Start Time"
+                    ),
+                ),
+                (
+                    "session_end_time",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="Session End Time"
+                    ),
+                ),
+                (
+                    "supplier_id",
+                    models.CharField(
+                        blank=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Supplier id",
+                    ),
+                ),
+                (
+                    "user_id",
+                    models.CharField(
+                        blank=True, max_length=225, null=True, verbose_name="User id"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Session',
-                'verbose_name_plural': 'Sessions',
+                "verbose_name": "Session",
+                "verbose_name_plural": "Sessions",
             },
         ),
         migrations.CreateModel(
-            name='RelatedProduct',
+            name="RelatedProduct",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('gtin', models.CharField(blank=True, max_length=225, null=True, verbose_name='Gtin')),
-                ('trade_item_unit_descriptor', models.CharField(blank=True, max_length=225, null=True, verbose_name='Trade Item Unit Descriptor')),
-                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='related_products', to='api.item')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                (
+                    "gtin",
+                    models.CharField(
+                        blank=True, max_length=225, null=True, verbose_name="Gtin"
+                    ),
+                ),
+                (
+                    "trade_item_unit_descriptor",
+                    models.CharField(
+                        blank=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Trade Item Unit Descriptor",
+                    ),
+                ),
+                (
+                    "item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="related_products",
+                        to="api.item",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Related Product',
-                'verbose_name_plural': 'Related Products',
+                "verbose_name": "Related Product",
+                "verbose_name_plural": "Related Products",
             },
         ),
         migrations.CreateModel(
-            name='Lot',
+            name="Lot",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('lot_number', models.CharField(blank=True, max_length=225, null=True, verbose_name='Lot Number')),
-                ('amount', models.IntegerField(blank=True, null=True, verbose_name='Amount')),
-                ('bbd', models.DateTimeField(blank=True, null=True, verbose_name='Best Before Date')),
-                ('comment', models.CharField(blank=True, max_length=225, null=True, verbose_name='Comment')),
-                ('country_of_disassembly', models.CharField(blank=True, max_length=100, null=True, verbose_name='Country of Disassembly')),
-                ('country_of_rearing', models.CharField(blank=True, max_length=100, null=True, verbose_name='Country of Rearing')),
-                ('country_of_slaughter', models.CharField(blank=True, max_length=100, null=True, verbose_name='Country of Slaughter')),
-                ('cutting_plant_registration', models.CharField(blank=True, max_length=225, null=True, verbose_name='Cutting Plant Registration')),
-                ('slaughterhouse_registration', models.CharField(blank=True, max_length=225, null=True, verbose_name='Slaughter House Registration')),
-                ('item', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='lot', to='api.item')),
-                ('session', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='lot', to='api.session')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                (
+                    "lot_number",
+                    models.CharField(
+                        blank=True, max_length=225, null=True, verbose_name="Lot Number"
+                    ),
+                ),
+                (
+                    "amount",
+                    models.IntegerField(blank=True, null=True, verbose_name="Amount"),
+                ),
+                (
+                    "bbd",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="Best Before Date"
+                    ),
+                ),
+                (
+                    "comment",
+                    models.CharField(
+                        blank=True, max_length=225, null=True, verbose_name="Comment"
+                    ),
+                ),
+                (
+                    "country_of_disassembly",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                        verbose_name="Country of Disassembly",
+                    ),
+                ),
+                (
+                    "country_of_rearing",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                        verbose_name="Country of Rearing",
+                    ),
+                ),
+                (
+                    "country_of_slaughter",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                        verbose_name="Country of Slaughter",
+                    ),
+                ),
+                (
+                    "cutting_plant_registration",
+                    models.CharField(
+                        blank=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Cutting Plant Registration",
+                    ),
+                ),
+                (
+                    "slaughterhouse_registration",
+                    models.CharField(
+                        blank=True,
+                        max_length=225,
+                        null=True,
+                        verbose_name="Slaughter House Registration",
+                    ),
+                ),
+                (
+                    "item",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="lot",
+                        to="api.item",
+                    ),
+                ),
+                (
+                    "session",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="lot",
+                        to="api.session",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Lot',
-                'verbose_name_plural': 'Lots',
+                "verbose_name": "Lot",
+                "verbose_name_plural": "Lots",
             },
         ),
     ]

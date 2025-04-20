@@ -1,4 +1,4 @@
-sample_data = '''{
+sample_data = """{
   "amounts":[
     {
       "amount":3,
@@ -76,4 +76,4 @@ sample_data = '''{
   "session_start_time":"2022-04-29T11:40:14.860Z",
   "supplier_id":"1050",
   "user_id":"adrian@sprk.global"
-}'''
+}"""
