@@ -1,11 +1,12 @@
-FROM python:3.9-slim-buster
+FROM python:3.13-alpine
 
-ENV PYTHONUNBUFFERED=1
+# Install build dependencies
+RUN apk add postgresql-dev python3-dev gcc libpq-dev
 
-WORKDIR /app
+WORKDIR /code
 
-COPY . .
-
-RUN pip3 install -r requirements.txt
-
-# CMD ["python3", "products_api/manage.py", "runserver", "0.0.0.0:8000"]
+RUN pip install --upgrade pip && pip install pipenv
+ENV PIPENV_CUSTOM_VENV_NAME="products-api"
+COPY Pipfile ./
+COPY Pipfile.lock ./
+RUN pipenv install --dev
