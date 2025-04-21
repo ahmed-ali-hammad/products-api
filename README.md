@@ -39,11 +39,11 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installing
 If you're opening this project using [devcontainers](https://containers.dev/) then your docker container should be ready to go!
 
-Otherwise you will need to start the docker compose environment `docker compose up` and open a shell into the container `products_api_container`.
+Otherwise you will need to start the docker compose environment `docker compose up` and open a shell into the container `products-api-dev`.
 
 ```bash
 $ docker compose up
-$ docker exec -it products_api_container sh  # spawns a shell within the docker container
+$ docker exec -it products-api-dev sh  # spawns a shell within the docker container
 $ pipenv shell  # spawns a shell within the virtualenv 
 ```
 
