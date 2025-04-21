@@ -1,6 +1,6 @@
 FROM python:3.13-alpine
 
-RUN apk add git postgresql-dev python3-dev gcc libpq-dev
+RUN apk add git postgresql-dev python3-dev gcc libpq-dev postgresql
 
 WORKDIR /code
 

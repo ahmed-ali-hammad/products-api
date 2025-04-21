@@ -7,7 +7,7 @@ from django.test import Client, TestCase, override_settings
 
 
 @override_settings(CELERY_ALWAYS_EAGER=True)
-class ItemViewset(TestCase):
+class TestItemViewset(TestCase):
     def setUp(self):
         self.client = Client()
         save_session_data(json.loads(sample_data))

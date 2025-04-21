@@ -19,7 +19,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=database_name
+      - POSTGRES_DB=products_db
     volumes:
       - ./db_mount:/var/lib/postgresql/data
   
@@ -31,11 +31,10 @@ services:
     restart: always
     build:
       context: .
-    # command: >
-    #   sh -c "cd products_api && celery -A products_api worker -l INFO"
-    command: 'sh -c "echo \"Container started\" && while sleep 1; do :; done"'
+    working_dir: /code/products_api
+    command: pipenv run celery -A products_api worker -l INFO
     volumes:
-      - .:/django
+      - .:/code
     container_name: products-api-celery
     depends_on:
       - database
