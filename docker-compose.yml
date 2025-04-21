@@ -1,30 +1,32 @@
 version: '3.8'
 services:
-  db:
-    image: postgres
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-    env_file:
-      - products_api/products_api/.env
-    container_name: postgres_db
-  
-  redis:
-    image: redis:alpine
-    container_name: redis
-  
-  app:
+  dev:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: products_api_container
+    container_name: products-api-dev
     ports:
       - 8000:8000
     volumes:
       - ./:/code
     command: 'sh -c "echo \"Container started\" && while sleep 1; do :; done"'
     depends_on:
-      - db
+      - database
 
+  database:
+    image: postgres:12
+    container_name: products-api-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=database_name
+    volumes:
+      - ./db_mount:/var/lib/postgresql/data
+  
+  redis:
+    image: redis:7.2.7-alpine
+    container_name: products-api-redis
+  
   celery:
     restart: always
     build:
@@ -34,9 +36,9 @@ services:
     command: 'sh -c "echo \"Container started\" && while sleep 1; do :; done"'
     volumes:
       - .:/django
-    container_name: celery
+    container_name: products-api-celery
     depends_on:
-      - db
+      - database
       - redis
-      - app 
+      - dev 
   
