@@ -49,11 +49,17 @@ $ pipenv shell  # spawns a shell within the virtualenv
 
 ### ▶️ Running the API
 ```bash
-$ python3 products_api/manage.py runserver 0.0.0.0:8000
+$ python products_api/manage.py runserver 0.0.0.0:8000
 ```
 
 Endpoints:
 - [API Docs](http://localhost:8000/api/schema/swagger-ui/)
+
+
+### Database Migrations
+```bash
+$ python products_api/manage.py migrate   # apply migrations
+```
 
 ### 🧪 Running the tests <a name = "tests"></a>
 - [pytest](https://docs.pytest.org/) is used to run unit and integration tests.   
