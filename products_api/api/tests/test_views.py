@@ -14,7 +14,7 @@ class TestItemViewset(TestCase):
 
     def test_create(self):
         response = self.client.post(
-            "/api/items/", data=sample_data, content_type="application/json"
+            "/items/", data=sample_data, content_type="application/json"
         )
 
         self.assertEqual(response.data, {"detail": "Session data is being stored"})

@@ -5,7 +5,7 @@ from rest_framework import serializers
 class AcceptFileSerializer(serializers.Serializer):
     """serializer class used to accept a file field"""
 
-    product_feed = serializers.FileField()
+    product_feed = serializers.FileField(required=True)
 
 
 class AcceptCodeSerializer(serializers.Serializer):
