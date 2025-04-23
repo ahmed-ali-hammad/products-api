@@ -74,6 +74,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Product API",
     "DESCRIPTION": "an api to store and list products",
     "VERSION": "1.0.0",
+    "COMPONENT_SPLIT_REQUEST": True,
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
