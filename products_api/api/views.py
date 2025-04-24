@@ -25,8 +25,8 @@ class ItemViewset(GenericViewSet):
     ]
 
     serializer_action_classes = {
-        "list_products": AcceptCodeSerializer,
-        "get_product": AcceptCodeSerializer,
+        "list_products": ItemListSerializer,
+        "get_product": ItemListSerializer,
         "import_from_feed_json": SessionCreateSerializer,
         "import_from_feed_file": AcceptFileSerializer,
     }
@@ -99,11 +99,12 @@ class ItemViewset(GenericViewSet):
                 name="code",
                 type=str,
                 location=OpenApiParameter.QUERY,
-                description="Product code",
+                description="product code",
                 required=True,
             )
         ],
         tags=["Products - Get"],
+        responses=ItemListSerializer,
     )
     @action(detail=False, methods=["get"], url_path="get/product")
     def get_product(self, request, *args, **kwargs):
@@ -127,7 +128,7 @@ class ItemViewset(GenericViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"Message": "Item not found"})
 
-    @extend_schema(tags=["Products - Get"])
+    @extend_schema(tags=["Products - Get"], responses=ItemListSerializer(many=True))
     @action(detail=False, methods=["get"], url_path="list/products")
     def list_products(self, request):
         """List all Products"""
